@@ -192,11 +192,12 @@ public class TableDrivenFSA implements java.io.Serializable {
      *         returns the value of the state parameter
      */
     public int nextState(final int currentState, final String inputSymbol) {
-    
+        if(currentState > alphabet.length || currentState < 0)
+            return currentState;
+
         for(int i = 0; i < alphabet.length; i++){
-            if (inputSymbol == alphabet[i]){
-                return stateTransitionTable[currentState][i];
-            }
+            if (alphabet[i].equals(inputSymbol))
+                return this.stateTransitionTable[currentState][i];
         }
         return currentState;
     }
@@ -207,19 +208,19 @@ public class TableDrivenFSA implements java.io.Serializable {
      * @return true if the end state is an accept state, false otherwise
      */
     public boolean processString(final String inputString) {
+        if (inputString == null)
+            return false;
+        
         int currentState = INITIAL_STATE;
         String[] arrOfStr = inputString.split(""); 
 
-        for ( String inputSymbol : arrOfStr){
-            currentState = nextState(currentState, inputSymbol );
+        for (String inputSymbol :arrOfStr){
+            currentState = this.nextState(currentState, inputSymbol);
         }
-
-        for ( Integer accepting : acceptStates){
-            if (currentState == accepting){
-                return true;
-            }
+        for (Integer accepting :acceptStates){
+            if (currentState == accepting)
+                return true; 
         }
-
         return false;
     }
 }
